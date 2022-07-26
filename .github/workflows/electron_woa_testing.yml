@@ -25,17 +25,19 @@ jobs:
       with:
         path: src\electron
     - name: Yarn install
-      run: node script/yarn.js install --frozen-lockfile
+      run: |
+        cd src\electron
+        node script/yarn.js install --frozen-lockfile
     - name: Download and extract dist.zip for test
       run: |
         $localArtifactPath = "$pwd\dist.zip"
         $serverArtifactPath = "https://ci.appveyor.com/api/buildjobs/${{ inputs.appveyor_job_id }}/artifacts/dist.zip"
         Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.APPVEYOR_TOKEN }} " }
-        & "${env:ProgramFiles(x86)}\7-Zip\7z.exe" x -o${{ env.GITHUB_WORKSPACE }}\src\out\Default -y $localArtifactPath
+        & "${env:ProgramFiles(x86)}\7-Zip\7z.exe" x -o${env.GITHUB_WORKSPACE}\src\out\Default -y $localArtifactPath
       shell: powershell
     - name: Download and extract native test executables for test
       run: |
-        $localArtifactPath = "${{ env.GITHUB_WORKSPACE }}\src\out\Default\shell_browser_ui_unittests.exe"
+        $localArtifactPath = "${env.GITHUB_WORKSPACE}\src\out\Default\shell_browser_ui_unittests.exe"
         $serverArtifactPath = "https://ci.appveyor.com/api/buildjobs/${{ inputs.appveyor_job_id }}/artifacts/shell_browser_ui_unittests.exe"
         Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.APPVEYOR_TOKEN }} " }
       shell: powershell
@@ -44,19 +46,19 @@ jobs:
         $localArtifactPath = "$pwd\ffmpeg.zip"
         $serverArtifactPath = "https://ci.appveyor.com/api/buildjobs/${{ inputs.appveyor_job_id }}/artifacts/ffmpeg.zip"
         Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.APPVEYOR_TOKEN }} " }
-        & "${env:ProgramFiles(x86)}\7-Zip\7z.exe" x -o${{ env.GITHUB_WORKSPACE }}\src\out\ffmpeg $localArtifactPath
+        & "${env:ProgramFiles(x86)}\7-Zip\7z.exe" x -o${env.GITHUB_WORKSPACE}\src\out\ffmpeg $localArtifactPath
       shell: powershell
     - name: Download node headers for test
       run: |
-        $localArtifactPath = "${{ env.GITHUB_WORKSPACE }}\src\node_headers.zip"
+        $localArtifactPath = "${env.GITHUB_WORKSPACE}\src\node_headers.zip"
         $serverArtifactPath = "https://ci.appveyor.com/api/buildjobs/${{ inputs.appveyor_job_id }}/artifacts/node_headers.zip"
         Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.APPVEYOR_TOKEN }} " }
-        cd ${{ env.GITHUB_WORKSPACE }}\src
+        cd ${env.GITHUB_WORKSPACE}\src
         & "${env:ProgramFiles(x86)}\7-Zip\7z.exe" x -y node_headers.zip
       shell: powershell
     - name: Download electron.lib for test
       run: |
-        $localArtifactPath = "${{ env.GITHUB_WORKSPACE }}\src\out\Default\electron.lib"
+        $localArtifactPath = "${env.GITHUB_WORKSPACE}\src\out\Default\electron.lib"
         $serverArtifactPath = "https://ci.appveyor.com/api/buildjobs/${{ inputs.appveyor_job_id }}/artifacts/electron.lib"
         Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.APPVEYOR_TOKEN }} " }
       shell: powershell
@@ -64,10 +66,10 @@ jobs:
     # - name: Download pdb files for detailed stacktraces
     #   run: |
     #     try {
-    #       $localArtifactPath = "${{ env.GITHUB_WORKSPACE }}\src\pdb.zip"
+    #       $localArtifactPath = "${env.GITHUB_WORKSPACE}\src\pdb.zip"
     #       $serverArtifactPath = "https://ci.appveyor.com/api/buildjobs/${{ inputs.appveyor_job_id }}/artifacts/pdb.zip"
     #       Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.APPVEYOR_TOKEN }} " }
-    #       cd ${{ env.GITHUB_WORKSPACE }}\src
+    #       cd ${env.GITHUB_WORKSPACE}\src
     #       & "${env:ProgramFiles(x86)}\7-Zip\7z.exe" x -y pdb.zip
     #     } catch {
     #       Write-Host "There was an exception encountered while downloading pdb files:" $_.Exception.Message
@@ -77,12 +79,12 @@ jobs:
     #   shell: powershell
     - name: Setup node headers
       run: |
-        New-Item ${{ env.GITHUB_WORKSPACE }}\src\out\Default\gen\node_headers\Release -Type directory
-        Copy-Item -path ${{ env.GITHUB_WORKSPACE }}\src\out\Default\electron.lib -destination ${{ env.GITHUB_WORKSPACE }}\src\out\Default\gen\node_headers\Release\node.lib
+        New-Item ${env.GITHUB_WORKSPACE}\src\out\Default\gen\node_headers\Release -Type directory
+        Copy-Item -path ${env.GITHUB_WORKSPACE}\src\out\Default\electron.lib -destination ${env.GITHUB_WORKSPACE}\src\out\Default\gen\node_headers\Release\node.lib
       shell: powershell
     - name: Run Electron Main process tests
       run: |
-        cd ${{ env.GITHUB_WORKSPACE }}\src
+        cd ${env.GITHUB_WORKSPACE}\src
         set npm_config_nodedir=%cd%\out\Default\gen\node_headers
         set npm_config_arch=arm64
         cd electron
@@ -96,7 +98,7 @@ jobs:
         MOCHA_REPORTER: mocha-multi-reporters
     - name: Run Electron Remote based tests
       run: |
-        cd ${{ env.GITHUB_WORKSPACE }}\src
+        cd ${env.GITHUB_WORKSPACE}\src
         set npm_config_nodedir=%cd%\out\Default\gen\node_headers
         set npm_config_arch=arm64
         cd electron
@@ -110,7 +112,7 @@ jobs:
       if: ${{ always() }}
     - name: Verify ffmpeg
       run: |
-        cd ${{ env.GITHUB_WORKSPACE }}\src
+        cd ${env.GITHUB_WORKSPACE}\src
         echo "Verifying non proprietary ffmpeg"
         python electron\script\verify-ffmpeg.py --build-dir out\Default --source-root %cd% --ffmpeg-path out\ffmpeg  
     - name: Kill processes left running from last test run
