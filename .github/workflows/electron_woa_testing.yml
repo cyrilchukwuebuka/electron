@@ -108,11 +108,6 @@ jobs:
         MOCHA_MULTI_REPORTERS: 'mocha-junit-reporter, tap'
         MOCHA_REPORTER: mocha-multi-reporters
       if: ${{ always() }}
-    - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action/composite@v1
-      if:  ${{ always() }}
-      with:
-        files: "${{ env.GITHUB_WORKSPACE }}/src/junit/**/*.xml"      
     - name: Verify ffmpeg
       run: |
         cd ${{ env.GITHUB_WORKSPACE }}\src
