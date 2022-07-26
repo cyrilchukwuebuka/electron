@@ -266,10 +266,10 @@ async function buildGHA (targetBranch, options) {
   jobRequestedCount++;
 
   try {
-    const response = await octokit.request('POST /repos/electron/electron/actions/workflows/electron_woa_testing/dispatches', {
-      ref: options.commit,
+    const response = await octokit.request('POST /repos/electron/electron/actions/workflows/electron_woa_testing.yml/dispatches', {
+      ref: targetBranch,
       inputs: {
-        appveyor_job_id: options.appveyorJobId
+        appveyor_job_id: `${options.appveyorJobId}`
       }
     });
   } catch (err) {

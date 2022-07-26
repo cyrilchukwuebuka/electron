@@ -27,27 +27,27 @@ jobs:
       run: |
         $localArtifactPath = "$pwd\dist.zip"
         $serverArtifactPath = "https://ci.appveyor.com/api/buildjobs/${{ inputs.appveyor_job_id }}/artifacts/dist.zip"
-        Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.${{ secrets.APPVEYOR_TOKEN }} }}" }
+        Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.APPVEYOR_TOKEN }} " }
         & "${env:ProgramFiles(x86)}\7-Zip\7z.exe" x -o${{ env.GITHUB_WORKSPACE }}\src\out\Default -y $localArtifactPath
       shell: powershell
     - name: Download and extract native test executables for test
       run: |
         $localArtifactPath = "${{ env.GITHUB_WORKSPACE }}\src\out\Default\shell_browser_ui_unittests.exe"
         $serverArtifactPath = "https://ci.appveyor.com/api/buildjobs/${{ inputs.appveyor_job_id }}/artifacts/shell_browser_ui_unittests.exe"
-        Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.${{ secrets.APPVEYOR_TOKEN }} }}" }
+        Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.APPVEYOR_TOKEN }} " }
       shell: powershell
     - name: Download and extract ffmpeg.zip for test
       run: |
         $localArtifactPath = "$pwd\ffmpeg.zip"
         $serverArtifactPath = "https://ci.appveyor.com/api/buildjobs/${{ inputs.appveyor_job_id }}/artifacts/ffmpeg.zip"
-        Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.${{ secrets.APPVEYOR_TOKEN }} }}" }
+        Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.APPVEYOR_TOKEN }} " }
         & "${env:ProgramFiles(x86)}\7-Zip\7z.exe" x -o${{ env.GITHUB_WORKSPACE }}\src\out\ffmpeg $localArtifactPath
       shell: powershell
     - name: Download node headers for test
       run: |
         $localArtifactPath = "${{ env.GITHUB_WORKSPACE }}\src\node_headers.zip"
         $serverArtifactPath = "https://ci.appveyor.com/api/buildjobs/${{ inputs.appveyor_job_id }}/artifacts/node_headers.zip"
-        Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.${{ secrets.APPVEYOR_TOKEN }} }}" }
+        Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.APPVEYOR_TOKEN }} " }
         cd ${{ env.GITHUB_WORKSPACE }}\src
         & "${env:ProgramFiles(x86)}\7-Zip\7z.exe" x -y node_headers.zip
       shell: powershell
@@ -55,7 +55,7 @@ jobs:
       run: |
         $localArtifactPath = "${{ env.GITHUB_WORKSPACE }}\src\out\Default\electron.lib"
         $serverArtifactPath = "https://ci.appveyor.com/api/buildjobs/${{ inputs.appveyor_job_id }}/artifacts/electron.lib"
-        Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.${{ secrets.APPVEYOR_TOKEN }} }}" }
+        Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.APPVEYOR_TOKEN }} " }
       shell: powershell
     # Uncomment the following block if pdb files are needed to debug issues
     # - name: Download pdb files for detailed stacktraces
@@ -63,7 +63,7 @@ jobs:
     #     try {
     #       $localArtifactPath = "${{ env.GITHUB_WORKSPACE }}\src\pdb.zip"
     #       $serverArtifactPath = "https://ci.appveyor.com/api/buildjobs/${{ inputs.appveyor_job_id }}/artifacts/pdb.zip"
-    #       Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.${{ secrets.APPVEYOR_TOKEN }} }}" }
+    #       Invoke-RestMethod -Method Get -Uri $serverArtifactPath -OutFile $localArtifactPath -Headers @{ "Authorization" = "Bearer ${{ secrets.APPVEYOR_TOKEN }} " }
     #       cd ${{ env.GITHUB_WORKSPACE }}\src
     #       & "${env:ProgramFiles(x86)}\7-Zip\7z.exe" x -y pdb.zip
     #     } catch {
