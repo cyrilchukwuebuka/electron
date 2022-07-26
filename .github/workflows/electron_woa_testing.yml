@@ -15,8 +15,7 @@ jobs:
 
     steps:
     - name: Clean Workspace
-      run: Remove-Item ${{ env.GITHUB_WORKSPACE }}\* -Recurse -Force
-      shell: powershell
+      uses: AutoModality/action-clean@v1      
     - name: Checkout 
       uses: actions/checkout@v3
       with:
